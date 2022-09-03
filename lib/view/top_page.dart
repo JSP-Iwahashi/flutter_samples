@@ -21,6 +21,12 @@ class TopPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               ListTile(
+                leading: const Icon(Icons.access_time),
+                title: const Text('Clock'),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(AppRoute.clock.routeName),
+              ),
+              ListTile(
                 leading: const Icon(Icons.timer_outlined),
                 title: const Text('Stopwatch'),
                 onTap: () => Navigator.of(context)
