@@ -14,23 +14,37 @@ class TopPage extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        child: Column(
-          children: [
-            TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(AppRoute.stopwatch.routeName),
-              child: const Text('Stopwatch'),
-            ),
-            TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(AppRoute.license.routeName),
-              child: const Text('MyLicencePage'),
-            ),
-            TextButton(
-              onPressed: () => showLicensePage(context: context),
-              child: const Text('showLicencePage'),
-            ),
-          ],
+        child: SizedBox(
+          width: 400,
+          child: ListView(
+            restorationId: 'top_page_list_view',
+            padding: const EdgeInsets.all(16),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.timer_outlined),
+                title: const Text('Stopwatch'),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(AppRoute.stopwatch.routeName),
+              ),
+              ListTile(
+                leading: const Icon(Icons.calculate_outlined),
+                title: const Text('Calculator'),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(AppRoute.calculator.routeName),
+              ),
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: const Text('Licence'),
+                onTap: () => showLicensePage(context: context),
+              ),
+              // ListTile(
+              //   leading: const Icon(Icons.info_outline),
+              //   title: const Text('Licence'),
+              //   onTap: () => Navigator.of(context)
+              //       .pushNamed(AppRoute.license.routeName),
+              // ),
+            ],
+          ),
         ),
       ),
     );

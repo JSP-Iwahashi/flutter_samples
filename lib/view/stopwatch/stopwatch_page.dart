@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_samples/utils.dart';
 import 'package:intl/intl.dart';
 
 class StopwatchPage extends StatefulWidget {
@@ -99,11 +98,9 @@ class StopwatchPageState extends State<StopwatchPage> {
               children: [
                 Text(
                   _time,
-                  style: const TextStyle(
-                    fontSize: 40,
-                  ),
+                  style: const TextStyle(fontSize: 40, color: Colors.black54),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 DefaultTextStyle.merge(
                   style: const TextStyle(
                     fontSize: 24,
@@ -122,18 +119,12 @@ class StopwatchPageState extends State<StopwatchPage> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconButton(
-                        onPressed: _refresh,
-                        icon: const Icon(Icons.refresh),
+                      iconButton(_refresh, Icons.refresh),
+                      iconButton(
+                        _toggleRun,
+                        _running ? Icons.stop : Icons.play_arrow,
                       ),
-                      IconButton(
-                        onPressed: _toggleRun,
-                        icon: Icon(_running ? Icons.stop : Icons.play_arrow),
-                      ),
-                      IconButton(
-                        onPressed: _recordLap,
-                        icon: const Icon(Icons.timer),
-                      ),
+                      iconButton(_recordLap, Icons.timer),
                     ],
                   ),
                 ),
@@ -142,6 +133,17 @@ class StopwatchPageState extends State<StopwatchPage> {
           ),
         ),
       ),
+    );
+  }
+
+  IconButton iconButton(void Function()? onPressed, IconData icon) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(
+        icon,
+        color: Colors.black54,
+      ),
+      splashRadius: 24,
     );
   }
 }

@@ -1,11 +1,12 @@
-import 'package:flutter_samples/view/license/my_license_page.dart';
+import 'package:flutter_samples/view/calculator/calculator_page.dart';
 import 'package:flutter_samples/view/stopwatch/stopwatch_page.dart';
 import 'package:flutter_samples/view/top_page.dart';
 
 enum AppRoute {
   top,
   stopwatch,
-  license,
+  calculator,
+  // license,
 }
 
 extension AppRouteExt on AppRoute {
@@ -15,8 +16,10 @@ extension AppRouteExt on AppRoute {
         return '/';
       case AppRoute.stopwatch:
         return '/stopwatch';
-      case AppRoute.license:
-        return '/license';
+      case AppRoute.calculator:
+        return '/calculator';
+      // case AppRoute.license:
+      //   return '/license';
     }
   }
 }
@@ -24,5 +27,6 @@ extension AppRouteExt on AppRoute {
 final appRoutes = {
   AppRoute.top.routeName: (context) => const TopPage(),
   AppRoute.stopwatch.routeName: (context) => const StopwatchPage(),
-  AppRoute.license.routeName: (context) => const MyLicensePage(),
+  AppRoute.calculator.routeName: (context) => const CalculatorPage(),
+  // AppRoute.license.routeName: (context) => const MyLicensePage(),
 };
