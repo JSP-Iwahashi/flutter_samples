@@ -26,9 +26,15 @@ class _ClockPageState extends State<ClockPage> {
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       setState(() {
         var now = DateTime.now();
+        // 360° == 2π
+        // 秒針の角度 = 2π × 秒 ÷ 60
         _secondAngle = pi * 2 * now.second / 60;
+        // 分針の角度 = 2π × 分 ÷ 60
+        // 秒針の角度を加味するため + 秒針の角度 ÷ 60
         _minuteAngle = pi * 2 * now.minute / 60 + _secondAngle / 60;
-        _hourAngle = pi * 2 * now.hour / 24 + _minuteAngle / 6;
+        // 時針の角度 = 2π × 時(12時間換算) ÷ 12
+        // 分針の角度を加味するため + 分針の角度 ÷ 12
+        _hourAngle = pi * 2 * (now.hour % 12) / 12 + _minuteAngle / 12;
       });
     });
   }
