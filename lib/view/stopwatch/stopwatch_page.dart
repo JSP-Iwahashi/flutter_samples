@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class StopwatchPage extends StatefulWidget {
-  const StopwatchPage({Key? key}) : super(key: key);
+  const StopwatchPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -15,28 +15,28 @@ class StopwatchPage extends StatefulWidget {
 class StopwatchPageState extends State<StopwatchPage> {
   static const _initialTime = '00:00:00.000';
   bool _running = false;
-  var _duration = const Duration();
-  var _start;
-  var _time;
-  var _laps;
-  var _timer;
+  late Duration _duration;
+  late DateTime _start;
+  late String _time;
+  late List<String> _laps;
+  late Timer _timer;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _refresh();
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (_running) {
         setState(() {
           // 経過時間を算出
-          var now = DateTime.now();
-          var diff = now.difference(_start);
+          final now = DateTime.now();
+          final diff = now.difference(_start);
           _start = now;
           _duration += diff;
           // Durationをそのまま文字列化するのは面倒なので、
           // 2000年1月1日 00:00:00 に加算して文字列化する
-          var date = DateTime(2000).add(_duration);
-          var formatter = DateFormat('HH:mm:ss.SSS');
+          final date = DateTime(2000).add(_duration);
+          final formatter = DateFormat('HH:mm:ss.SSS');
           _time = formatter.format(date);
         });
       }
@@ -44,29 +44,28 @@ class StopwatchPageState extends State<StopwatchPage> {
   }
 
   @override
-  dispose() {
+  void dispose() {
     super.dispose();
     // 画面を閉じた後にタイマーが動作しているとエラーが発生してしまうため、
     // 画面を閉じる前にタイマーを破棄しておく
     _timer.cancel();
   }
 
-  ///
-  _toggleRun() {
+  void _toggleRun() {
     setState(() {
       _start = DateTime.now();
       _running = !_running;
     });
   }
 
-  _refresh() {
+  void _refresh() {
     setState(() {
       if (_running) {
         _toggleRun();
       }
       _running = false;
       _time = _initialTime;
-      _duration = const Duration();
+      _duration = Duration.zero;
       _laps = [
         _initialTime,
         _initialTime,
@@ -75,7 +74,7 @@ class StopwatchPageState extends State<StopwatchPage> {
     });
   }
 
-  _recordLap() {
+  void _recordLap() {
     setState(() {
       _laps = [
         _time,
@@ -91,7 +90,6 @@ class StopwatchPageState extends State<StopwatchPage> {
       appBar: AppBar(title: const Text('Stopwatch')),
       body: SizedBox.expand(
         child: FittedBox(
-          fit: BoxFit.contain,
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -106,17 +104,18 @@ class StopwatchPageState extends State<StopwatchPage> {
                     fontSize: 24,
                     color: Colors.grey,
                   ),
-                  child: Column(children: [
-                    Text(_laps[0]),
-                    Text(_laps[1]),
-                    Text(_laps[2]),
-                  ]),
+                  child: Column(
+                    children: [
+                      Text(_laps[0]),
+                      Text(_laps[1]),
+                      Text(_laps[2]),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: 200,
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       iconButton(_refresh, Icons.refresh),

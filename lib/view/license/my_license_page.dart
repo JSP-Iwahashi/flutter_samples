@@ -1,26 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_samples/common/logger.dart';
 
 class MyLicensePage extends StatefulWidget {
-  const MyLicensePage({Key? key}) : super(key: key);
+  const MyLicensePage({super.key});
 
   @override
   State<StatefulWidget> createState() {
     return MyLicensePageState();
   }
 }
+
 class MyLicensePageState extends State<MyLicensePage> {
   List<List<String>> licenses = [];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     var count = 0;
     LicenseRegistry.licenses.listen((license) {
       // license.packagesとlicense.paragraphsの返り値がIterableなのでtoList()してる
       final packages = license.packages.toList();
       final paragraphs = license.paragraphs.toList();
-      final packageName = packages.map((e) => e).join('');
+      final packageName = packages.map((e) => e).join();
       final paragraphText = paragraphs.map((e) => e.text).join('\n');
       // この辺の状態更新とかは環境に合わせてお好みで
       licenses.add([packageName, paragraphText]);
@@ -28,14 +30,18 @@ class MyLicensePageState extends State<MyLicensePage> {
         licenses = licenses;
       });
       if (count++ == 3) {
-        print(packages);
-        for (var e in paragraphs) {
-          var indent = '    ' * e.indent;
-          print('###${indent} ${e.text.substring(0, 10)} ${e.indent}');
+        if (kDebugMode) {
+          logger.fine(packages);
+        }
+        for (final e in paragraphs) {
+          final indent = '    ' * e.indent;
+          if (kDebugMode) {
+            logger.fine('###${indent} ${e.text.substring(0, 10)} ${e.indent}');
+          }
         }
       }
     });
-    print('MyLicensePage');
+    logger.fine('MyLicensePage');
   }
 
   @override

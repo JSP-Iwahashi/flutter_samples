@@ -16,6 +16,8 @@ dependencies:
   intl: ^0.17.0
   expressions: ^0.2.4
   flutter_svg: ^1.1.4
+  pedantic_mono: ^1.20.0
+  simple_logger: ^1.9.0+1
 
 dev_dependencies:
   flutter_test:

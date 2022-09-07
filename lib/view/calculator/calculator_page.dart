@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:expressions/expressions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_samples/common/logger.dart';
 
 class CalculatorPage extends StatefulWidget {
-  const CalculatorPage({Key? key}) : super(key: key);
+  const CalculatorPage({super.key});
 
   @override
   State<CalculatorPage> createState() => _CalculatorPageState();
@@ -13,9 +15,9 @@ class CalculatorPage extends StatefulWidget {
 
 class _CalculatorPageState extends State<CalculatorPage> {
   static const _error = 'error';
-  var _expression = '0';
-  var _focusNode = FocusNode();
-  var _timer;
+  late String _expression = '';
+  late Timer _timer;
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -42,7 +44,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           // 全角 ×, ÷ を半角 *, / に変換
           var e = _expression.replaceAll('×', '*');
           e = e.replaceAll('÷', '/');
-          print('_expression: $_expression, e: $e');
+          logger.fine('_expression: $_expression, e: $e');
 
           try {
             // 数式実行ライブラリで式を実行
@@ -57,10 +59,18 @@ class _CalculatorPageState extends State<CalculatorPage> {
             } else {
               _expression = result;
             }
-          } catch (e) {
+          } on Exception {
             // 式がおかしい場合は error で置き換える
             _expression = _error;
           }
+          break;
+
+        case '*':
+          _addExpression('×');
+          break;
+
+        case '/':
+          _addExpression('÷');
           break;
 
         case '0':
@@ -76,8 +86,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
         case '.':
         case '+':
         case '-':
-        case '*':
-        case '/':
+        case '×':
+        case '÷':
           // 式が error または 0 なら空にしておく
           switch (_expression) {
             case _error:
@@ -102,7 +112,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final gridWidth = size.width - 16;
     final gridHeight = (size.height - 56 - 16) * 4 / 5;
     final aspectRatio = gridWidth / gridHeight;
-    print({size, "${gridWidth}x$gridHeight", aspectRatio});
+    if (kDebugMode) {
+      logger.fine({size, '${gridWidth}x$gridHeight', aspectRatio});
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -111,35 +123,32 @@ class _CalculatorPageState extends State<CalculatorPage> {
       body: KeyboardListener(
         focusNode: _focusNode,
         onKeyEvent: (e) {
-          print(e);
           if (e is KeyDownEvent) {
+            logger.info(e);
             if (e.logicalKey == LogicalKeyboardKey.enter) {
               _addExpression('=');
-            }
-            else if (e.logicalKey == LogicalKeyboardKey.keyC) {
+            } else if (e.logicalKey == LogicalKeyboardKey.keyC) {
               _addExpression('C');
-            }
-            else {
+            } else {
               _addExpression(e.character ?? '');
             }
           }
         },
         child: Container(
           color: Colors.grey.shade200,
-          constraints: const BoxConstraints(maxHeight: double.infinity),
+          constraints: const BoxConstraints(),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 Expanded(
-                  flex: 1,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         _expression,
-                        style: const TextStyle(fontSize: 64.0),
+                        style: const TextStyle(fontSize: 64),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.end,
                       ),
@@ -151,8 +160,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   child: GridView.count(
                     crossAxisCount: 4,
                     childAspectRatio: aspectRatio,
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
                     children: [
                       '7', '8', '9', '÷', //
                       '4', '5', '6', '×', //
@@ -187,27 +196,3 @@ class _CalculatorPageState extends State<CalculatorPage> {
     );
   }
 }
-
-class Button extends StatelessWidget {
-  final String label;
-  final void Function() onPressed;
-
-  const Button({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 36.0),
-      ),
-    );
-  }
-}
-
-// 676x796
