@@ -22,19 +22,25 @@ class TopPage extends StatelessWidget {
                 leading: const Icon(Icons.access_time),
                 title: const Text('Clock'),
                 onTap: () =>
-                    Navigator.of(context).pushNamed(AppRoute.clock.routeName),
+                    Navigator.of(context).pushNamed(AppRoute.clock.name),
               ),
               ListTile(
                 leading: const Icon(Icons.timer_outlined),
                 title: const Text('Stopwatch'),
                 onTap: () => Navigator.of(context)
-                    .pushNamed(AppRoute.stopwatch.routeName),
+                    .pushNamed(AppRoute.stopwatch.name),
               ),
               ListTile(
                 leading: const Icon(Icons.calculate_outlined),
                 title: const Text('Calculator'),
                 onTap: () => Navigator.of(context)
-                    .pushNamed(AppRoute.calculator.routeName),
+                    .pushNamed(AppRoute.calculator.name),
+              ),
+              ListTile(
+                leading: const Icon(Icons.dataset_outlined),
+                title: const Text('Othello'),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(AppRoute.othello.name),
               ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
